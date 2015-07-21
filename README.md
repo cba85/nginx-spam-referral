@@ -1,31 +1,34 @@
 # nginx-spam-referral
-Blacklist Referer Spam Bots with NGINX
+Blacklist Referer Spam Bots and Referers with NGINX
 
 **See [http://fadeit.dk/blog/post/nginx-referer-spam-blacklist](http://fadeit.dk/blog/post/nginx-referer-spam-blacklist) and [https://github.com/oohnoitz/nginx-blacklist](https://github.com/oohnoitz/nginx-blacklist) for more.**
 
-**blacklist.conf** utilizes the following two nginx modules to achieve the same results as the original **bad-bot-blocker**: `ngx_http_geo_module` and `ngx_http_map_module`. This provides admins with a single configuration file used for blacklisting any bots or malicious web crawlers without the need to complicate server blocks.
+**blacklist.conf** utilizes the following two nginx modules to achieve the same results as the original **bad-bot-blocker**: `ngx_http_geo_module` and `ngx_http_map_module`. This provides admins with a single configuration file used for blacklisting any spam referers, bots or malicious web crawlers without the need to complicate server blocks.
+
+> Referrer spam (also known as log spam or referrer bombing) is a kind of spamdexing (spamming aimed at search engines). The technique involves making repeated web site requests using a fake referer URL to the site the spammer wishes to advertise. Sites that publish their access logs, including referer statistics, will then inadvertently link back to the spammer's site. These links will be indexed by search engines as they crawl the access logs. - Wikipedia
+
 
 ----
 
 ### Install
 1. Save `blacklist.conf` somewhere accessible by nginx.
 2. Include `blacklist.conf` in your `nginx.conf` before your server blocks.
-	```
-	http {
-	# ...
-	  include blacklist.conf;
-	# ...
-	}
-	```
+```
+http {
+# ...
+  include blacklist.conf;
+# ...
+}
+```
 3. Add the following in each server block you wish to apply the blacklist to:
-    ```
-    if ($bad_referer) {
-    	return 444;
-  	}
-    if ($bad_client) {
-      return 403;
-    }
-    ```
+```
+if ($bad_referer) {
+	return 444;
+	}
+if ($bad_client) {
+  return 403;
+}
+```
 
 ### Configure
 
